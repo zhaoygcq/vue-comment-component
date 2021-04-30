@@ -8,10 +8,10 @@
 ## 安装
 
 ``` shell
-npm i @fengfengfeng/vue-juejin-comment
+npm i vue-juejin-comment
 
 # or yarn
-yarn add @fengfengfeng/vue-juejin-comment
+yarn add vue-juejin-comment
 ```
 
 ## 功能
@@ -49,8 +49,7 @@ yarn add @fengfengfeng/vue-juejin-comment
 </template>
 
 <script>
-import Comment from '@fengfengfeng/vue-juejin-comment'
-import '@fengfengfeng/vue-juejin-comment/dist/vue-juejin-comment.css'
+import Comment from 'vue-juejin-comment'
 
 export default {
   data() {
