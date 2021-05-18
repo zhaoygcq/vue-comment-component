@@ -285,7 +285,6 @@ export default {
     // * 点赞
     async handleCommentLike({ id, comment: { children, _liked, ...params }}) {
       const _params = Object.assign(params, { user: this.user })
-      console.log(_params, this.transformToOriginObj(_params))
       if (typeof this.beforeLike === 'function') {
         try {
           await this.beforeLike(this.transformToOriginObj(_params))
