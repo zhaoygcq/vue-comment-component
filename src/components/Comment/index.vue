@@ -129,9 +129,9 @@ export default {
     }
   },
   computed: {
-    computedProps() {
-      if (!this.props) return null
-      const entries = Object.entries(this.props)
+    computedProps({ props }) {
+      if (!props) return null
+      const entries = Object.entries(props)
       return entries.length > 0 ? entries : null
     }
   },
@@ -150,7 +150,8 @@ export default {
     // * 对比和检查每条评论对象字段值
     comparePropsAndValues(comment) {
       // 初始对象
-      const map = {
+      const originObj = {
+        id: '',
         content: '',
         imgSrc: '',
         children: [],
@@ -161,18 +162,18 @@ export default {
       }
 
       // 赋值
-      for (const key in map) {
-        map[key] = comment[this.props[key]] || comment[key] || map[key]
+      for (const key in originObj) {
+        originObj[key] = comment[this.props[key]] || comment[key] || originObj[key]
 
         // 校验
-        this.validate({ key, value: map[key] })
+        this.validate({ key, value: originObj[key] })
       }
 
-      if (map.children.length > 0) {
-        map.children = map.children.map(this.comparePropsAndValues)
+      if (originObj.children.length > 0) {
+        originObj.children = originObj.children.map(this.comparePropsAndValues)
       }
 
-      return map
+      return originObj
     },
     // * 校验数据
     validate({ key, value }) {
@@ -227,7 +228,7 @@ export default {
           })
         )
 
-        if (_comment.children.length > 0) {
+        if (_comment.children && _comment.children.length > 0) {
           _comment.children = _comment.children.map(this.transformToOriginObj)
         }
 
@@ -242,8 +243,8 @@ export default {
         }
 
         return _comment
-      } catch {
-        return comment
+      } catch (e) {
+        console.error(e)
       }
     },
     // * 点击回复按钮，判断是否已存在该id的表单，存在删除该表单，不存在则新增该表单，并触发其他表单blur事件
@@ -269,12 +270,13 @@ export default {
       if (typeof this.beforeSubmit === 'function') {
         try {
           const data = this.transformToOriginObj(_params)
-          const res = await this.beforeSubmit(data, parent)
-          if (res === false) return
 
-          // 插入评论或回复
-          this.addComment(id, params)
-          callback()
+          const add = (data) => {
+            this.addComment(id, this.comparePropsAndValues(data))
+            callback()
+          }
+
+          await this.beforeSubmit(data, parent, add)
         } catch (e) {
           console.error(e)
         }
@@ -283,11 +285,10 @@ export default {
     // * 点赞
     async handleCommentLike({ id, comment: { children, _liked, ...params }}) {
       const _params = Object.assign(params, { user: this.user })
-
+      console.log(_params, this.transformToOriginObj(_params))
       if (typeof this.beforeLike === 'function') {
         try {
-          const res = await this.beforeLike(this.transformToOriginObj(_params))
-          if (res === false) return
+          await this.beforeLike(this.transformToOriginObj(_params))
 
           this.storeLikes(id)
         } catch (e) {
@@ -300,12 +301,11 @@ export default {
       if (typeof this.beforeDelete === 'function') {
         try {
           const data = this.transformToOriginObj(comment)
-          const res = await this.beforeDelete(data, parent)
-          if (res === false) return
+          await this.beforeDelete(data, parent)
 
           this.deleteComment(id)
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
       }
     },
