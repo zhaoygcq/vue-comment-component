@@ -45,7 +45,7 @@
           <div
             v-if="user.author === true"
             class="delete"
-            @click.stop="$emit('comment-delete', { id, comment })"
+            @click.stop="$emit('comment-delete', { id, comment, parent })"
           >
             <span>·</span>删除
           </div>
@@ -120,6 +120,10 @@ export default {
     id: {
       type: [String, Number],
       required: true
+    },
+    parent: {
+      type: Object,
+      default: () => {}
     },
     user: {
       type: Object,

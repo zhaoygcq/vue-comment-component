@@ -28,6 +28,7 @@
           <comment-form
             v-if="forms.includes(id)"
             :id="id"
+            :parent="comment"
             :placeholder="`回复${comment.user.name}...`"
             :upload-img="uploadImg"
             @form-submit="formSubmit"
@@ -46,6 +47,7 @@
               :ref="`${parentId}-${j}`"
               :comment="child"
               :user="user"
+              :parent="comment"
               @comment-reply="hasForm"
               @comment-like="handleCommentLike"
               @comment-delete="handleCommentDelete"
@@ -55,6 +57,7 @@
                 v-if="forms.includes(`${parentId}-${j}`)"
                 :id="`${parentId}-${j}`"
                 :comment="child"
+                :parent="comment"
                 :placeholder="`回复${child.user && child.user.name}...`"
                 :upload-img="uploadImg"
                 @form-delete="deleteForm"
@@ -101,22 +104,22 @@ export default {
     /* 提交表单前事件 */
     beforeSubmit: {
       type: Function,
-      default: null
+      required: true
     },
     /* 执行点赞前事件 */
     beforeLike: {
       type: Function,
-      default: null
+      required: true
     },
     /* 执行删除前事件 */
     beforeDelete: {
       type: Function,
-      default: null
+      required: true
     },
     /* 上传图片 */
     uploadImg: {
       type: Function,
-      default: null
+      required: true
     }
   },
   data() {
@@ -259,23 +262,23 @@ export default {
       index > -1 && this.forms.splice(index, 1)
     },
     // * 评论或回复
-    async formSubmit({ id, callback, ...params }) {
+    async formSubmit({ newComment: { id, callback, ...params }, parent = null }) {
       const _params = Object.assign(params, { user: this.user })
 
       // 等待外部提交事件执行
       if (typeof this.beforeSubmit === 'function') {
         try {
           const data = this.transformToOriginObj(_params)
-          const res = await this.beforeSubmit(data)
+          const res = await this.beforeSubmit(data, parent)
           if (res === false) return
+
+          // 插入评论或回复
+          this.addComment(id, params)
+          callback()
         } catch (e) {
-          throw new Error(e)
+          console.error(e)
         }
       }
-
-      // 插入评论或回复
-      this.addComment(id, params)
-      callback()
     },
     // * 点赞
     async handleCommentLike({ id, comment: { children, _liked, ...params }}) {
@@ -285,26 +288,26 @@ export default {
         try {
           const res = await this.beforeLike(this.transformToOriginObj(_params))
           if (res === false) return
+
+          this.storeLikes(id)
         } catch (e) {
-          throw new Error(e)
+          console.error(e)
         }
       }
-
-      this.storeLikes(id)
     },
     // * 删除评论或回复
-    async handleCommentDelete({ id, comment }) {
+    async handleCommentDelete({ id, comment, parent = null }) {
       if (typeof this.beforeDelete === 'function') {
         try {
           const data = this.transformToOriginObj(comment)
-          const res = await this.beforeDelete(data)
+          const res = await this.beforeDelete(data, parent)
           if (res === false) return
+
+          this.deleteComment(id)
         } catch (e) {
-          throw new Error(e)
+          console.log(e)
         }
       }
-
-      this.deleteComment(id)
     },
     // * 保存点赞
     storeLikes(id) {

@@ -76,11 +76,11 @@ export default {
     this.wrapStyle = `height: calc(100vh - ${header.clientHeight + 20}px)`
   },
   methods: {
-    async submit(info) {
+    async submit(newCommetn, parent) {
       const res = await new Promise((resolve) => {
         setTimeout(() => {
-          resolve(info)
-        }, 0)
+          resolve({ newCommetn, parent })
+        }, 300)
       })
 
       console.log('addComment: ', res)
@@ -109,11 +109,11 @@ export default {
       callback(res)
       console.log('uploadImg： ', res)
     },
-    async deleteComment(comment) {
+    async deleteComment(comment, parent) {
       const res = await new Promise((resolve) => {
         setTimeout(() => {
-          resolve(comment)
-        }, 0)
+          resolve({ comment, parent })
+        }, 300)
       })
 
       console.log('deleteComment: ', res)

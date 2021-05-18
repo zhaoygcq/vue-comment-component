@@ -129,6 +129,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    parent: {
+      type: Object,
+      default: () => {}
+    },
     uploadImg: {
       type: Function,
       default: null
@@ -258,7 +262,7 @@ export default {
         data.children = []
       }
 
-      this.$emit('form-submit', data)
+      this.$emit('form-submit', { newComment: data, parent: this.parent })
     },
     // * 重置组件状态
     reset() {
