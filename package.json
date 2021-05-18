@@ -18,8 +18,7 @@
     "url": "https://github.com/fenghan34/vue-comment-component"
   },
   "files": [
-    "lib",
-    "example"
+    "lib"
   ],
   "scripts": {
     "serve": "vue-cli-service serve",
