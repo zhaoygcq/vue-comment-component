@@ -28,7 +28,7 @@ yarn add vue-juejin-comment
 | data / v-model | 绑定数据| Array          | ——                           | ——     |
 | user           | 当前用户| Object         | ——                           | ——     |
 | props          | 单条评论模型| Object     | ——                           | ——      |
-| before-submit  | 提交评论的回调函数        | Function(comment, parent)            | ——     |
+| before-submit  | 提交评论的回调函数        | Function(comment, parent, add)            | ——     |
 | before-like    | 点赞的回调函数            | Function(comment)            | ——     |
 | before-delete  | 点击删除评论的回调函数     | Function(comment, parent)            | ——     |
 | upload-img     | 上传（复制）图片的回调函数 | Function({ file, callback }) | ——     |  
@@ -64,8 +64,11 @@ export default {
     }
   },
   methods: {
-    addComment(comment, parent) {
+    addComment(comment, parent, add) {
       // ...
+
+      // 需调用 add 函数，并传入 newComment 对象
+      add(newComment)
     },
     deleteComment(comment, parent) {
       // ...
@@ -89,6 +92,7 @@ export default {
 
 ``` js
 {
+  id: '', // 唯一 id，必需
   content: '', // 评论内容，必需
   imgSrc: '', // 评论中的图片地址，非必需
   children: [], // 子评论（回复），非必需
@@ -105,6 +109,7 @@ export default {
 
 ``` js
 props: {
+  id: 'id',
   content: 'content',
   imgSrc: 'img',
   children: 'childrenComments',
