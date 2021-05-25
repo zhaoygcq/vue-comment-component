@@ -5,7 +5,7 @@
     "vue"
   ],
   "description": "一个掘金社区风格的评论组件",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": false,
   "main": "lib/vue-juejin-comment.umd.min.js",
   "license": "MIT",
