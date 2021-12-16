@@ -9,10 +9,7 @@
   "private": false,
   "main": "lib/vue-juejin-comment.umd.min.js",
   "license": "MIT",
-  "author": {
-    "name": "Feng Han",
-    "email": "fenghan770@gmail.com"
-  },
+  "author": "Feng Han <hi@fenghan.link>",
   "repository": {
     "type": "git",
     "url": "https://github.com/fenghan34/vue-comment-component"
@@ -21,7 +18,8 @@
     "lib"
   ],
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "dev": "vue-cli-service serve",
+    "start": "npx serve dist",
     "build": "vue-cli-service build",
     "lib": "vue-cli-service build --target lib --name vue-juejin-comment --dest lib src/components/Comment/index.js",
     "lint": "vue-cli-service lint"
@@ -46,5 +44,8 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "engines": {
+    "node": ">14.0"
+  }
 }

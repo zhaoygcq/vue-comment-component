@@ -6,7 +6,7 @@
         class="avatar"
         :src="user.avatar || ''"
         @error="(e) => e.target.classList.add('error')"
-      >
+      />
     </comment-form>
 
     <!-- 底部评论列表 -->
@@ -81,51 +81,51 @@ export default {
   inheritAttrs: false,
   model: {
     prop: 'data',
-    event: 'input'
+    event: 'input',
   },
   props: {
     /* 数据 */
     data: {
       type: Array,
       default: () => [],
-      required: true
+      required: true,
     },
     /* 当前用户 */
     user: {
       type: Object,
       default: () => {},
-      required: true
+      required: true,
     },
     /* 配置属性 */
     props: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     /* 提交表单前事件 */
     beforeSubmit: {
       type: Function,
-      required: true
+      required: true,
     },
     /* 执行点赞前事件 */
     beforeLike: {
       type: Function,
-      required: true
+      required: true,
     },
     /* 执行删除前事件 */
     beforeDelete: {
       type: Function,
-      required: true
+      required: true,
     },
     /* 上传图片 */
     uploadImg: {
       type: Function,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       forms: [], // 显示在视图上的表单id数组
-      cacheData: []
+      cacheData: [],
     }
   },
   computed: {
@@ -133,7 +133,7 @@ export default {
       if (!props) return null
       const entries = Object.entries(props)
       return entries.length > 0 ? entries : null
-    }
+    },
   },
   created() {
     // 监听并执行一次
@@ -158,12 +158,13 @@ export default {
         likes: 0,
         reply: null,
         createAt: null,
-        user: {}
+        user: {},
       }
 
       // 赋值
       for (const key in originObj) {
-        originObj[key] = comment[this.props[key]] || comment[key] || originObj[key]
+        originObj[key] =
+          comment[this.props[key]] || comment[key] || originObj[key]
 
         // 校验
         this.validate({ key, value: originObj[key] })
@@ -185,26 +186,26 @@ export default {
               this.message
             )
           },
-          message: 'User must be an object with props.'
+          message: 'User must be an object with props.',
         },
         reply: {
           validate: function(v) {
             return typeof v !== 'object' && this.message
           },
-          message: 'Reply must be an object'
+          message: 'Reply must be an object',
         },
         children: {
           validate: function(v) {
             return !Array.isArray(v) && this.message
           },
-          message: 'Children must be an array'
+          message: 'Children must be an array',
         },
         createAt: {
-          validate: function(v) {
+          validate: function() {
             return new Date(value).toString() === 'Invalid Date' && this.message
           },
-          message: 'CreateAt is not a valid date.'
-        }
+          message: 'CreateAt is not a valid date.',
+        },
       }
 
       const target = map[key]
@@ -263,7 +264,10 @@ export default {
       index > -1 && this.forms.splice(index, 1)
     },
     // * 评论或回复
-    async formSubmit({ newComment: { id, callback, ...params }, parent = null }) {
+    async formSubmit({
+      newComment: { id, callback, ...params },
+      parent = null,
+    }) {
       const _params = Object.assign(params, { user: this.user })
 
       // 等待外部提交事件执行
@@ -283,7 +287,7 @@ export default {
       }
     },
     // * 点赞
-    async handleCommentLike({ id, comment: { children, _liked, ...params }}) {
+    async handleCommentLike({ id, comment: { children, _liked, ...params } }) {
       const _params = Object.assign(params, { user: this.user })
       if (typeof this.beforeLike === 'function') {
         try {
@@ -393,8 +397,8 @@ export default {
       this.$nextTick(() => {
         this.$refs[ref][0].$el.scrollIntoView(false)
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
