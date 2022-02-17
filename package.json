@@ -1,6 +1,6 @@
 {
   "name": "vue-juejin-comment",
-  "version": "0.1.6",
+  "version": "1.0.0",
   "private": false,
   "description": "一个掘金社区风格的评论组件",
   "repository": {
