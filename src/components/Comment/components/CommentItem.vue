@@ -6,23 +6,24 @@
         class="avatar"
         :src="comment.user.avatar || ''"
         @error="(e) => e.target.classList.add('error')"
-      >
+      />
       <div class="content-box">
         <!-- 评论或回复人具体信息 -->
         <div class="meta-box">
           <slot name="userMeta">
             <div class="user-popover-box">
-              <span v-if="comment.user">{{ comment.user.name + (comment.user.author === true ? '（作者）' : '') }}</span>
+              <span v-if="comment.user">{{
+                comment.user.name +
+                (comment.user.author === true ? '（作者）' : '')
+              }}</span>
             </div>
           </slot>
         </div>
 
         <!-- 评论或回复内容 -->
         <div class="content">
-          <span
-            v-if="comment.reply"
-            class="reply"
-          >回复
+          <span v-if="comment.reply" class="reply"
+            >回复
             <span class="reply-target" :title="comment.reply.email">{{
               comment.reply.name + '：'
             }}</span>
@@ -32,7 +33,7 @@
             <img
               :src="comment.imgSrc || ''"
               @error="(e) => e.target.classList.add('error')"
-            >
+            />
           </div>
         </div>
 
@@ -41,7 +42,8 @@
           <time
             :title="formatTime(comment.createAt, true)"
             :datetime="comment.createAt"
-          >{{ formatTime(comment.createAt) }}</time>
+            >{{ formatTime(comment.createAt) }}</time
+          >
           <div
             v-if="user.author === true"
             class="delete"
@@ -52,7 +54,7 @@
           <div class="action-box">
             <div
               class="like-action action"
-              :class="{ active: comment._liked }"
+              :class="{ active: comment.liked }"
               @click.stop="$emit('comment-like', { id, comment })"
             >
               <svg
@@ -63,9 +65,9 @@
                 <g fill="none" fill-rule="evenodd">
                   <path d="M0 0h20v20H0z" />
                   <path
-                    :stroke="comment._liked ? '#37C700' : '#8A93A0'"
+                    :stroke="comment.liked ? '#37C700' : '#8A93A0'"
                     stroke-linejoin="round"
-                    :fill="comment._liked ? '#37c700' : 'none'"
+                    :fill="comment.liked ? '#37c700' : 'none'"
                     d="M4.58 8.25V17h-1.4C2.53 17 2 16.382 2 15.624V9.735c0-.79.552-1.485 1.18-1.485h1.4zM11.322 2c1.011.019 1.614.833 1.823 1.235.382.735.392 1.946.13 2.724-.236.704-.785 1.629-.785 1.629h4.11c.434 0 .838.206 1.107.563.273.365.363.84.24 1.272l-1.86 6.513A1.425 1.425 0 0 1 14.724 17H6.645V7.898C8.502 7.51 9.643 4.59 9.852 3.249A1.47 1.47 0 0 1 11.322 2z"
                   />
                 </g>
@@ -115,25 +117,25 @@ export default {
     comment: {
       type: Object,
       default: () => {},
-      required: true
+      required: true,
     },
     id: {
       type: [String, Number],
-      required: true
+      required: true,
     },
     parent: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     user: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   computed: {
     isSubComment() {
       return this.id.split('-').length === 3
-    }
+    },
   },
   methods: {
     formatTime(time, local = false) {
@@ -146,21 +148,22 @@ export default {
       const now = Date.now()
       const diff = (now - d) / 1000
 
-      if (diff < 30) {
-        return '刚刚'
-      } else if (diff < 3600) {
-        return Math.ceil(diff / 60) + '分钟前'
-      } else if (diff < 3600 * 24) {
-        return Math.ceil(diff / 3600) + '小时前'
-      } else if (diff < 3600 * 24 * 30) {
-        return Math.floor(diff / 3600 / 24) + '天前'
-      } else if (diff < 3600 * 24 * 365) {
-        return Math.floor(diff / 3600 / 24 / 30) + '月前'
-      } else {
-        return Math.floor(diff / 3600 / 24 / 365) + '年前'
+      switch (true) {
+        case diff < 30:
+          return '刚刚'
+        case diff < 3600:
+          return Math.ceil(diff / 60) + '分钟前'
+        case diff < 3600 * 24:
+          return Math.ceil(diff / 3600) + '小时前'
+        case diff < 3600 * 24 * 30:
+          return Math.floor(diff / 3600 / 24) + '天前'
+        case diff < 3600 * 24 * 365:
+          return Math.floor(diff / 3600 / 24 / 30) + '月前'
+        default:
+          return Math.floor(diff / 3600 / 24 / 365) + '年前'
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

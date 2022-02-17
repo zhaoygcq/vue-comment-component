@@ -24,7 +24,7 @@
         @comment-delete="handleCommentDelete"
       >
         <!-- 回复表单 -->
-        <template #default="{id}">
+        <template #default="{ id }">
           <comment-form
             v-if="forms.includes(id)"
             :id="id"
@@ -37,7 +37,7 @@
         </template>
 
         <!-- 单条评论下的回复列表 -->
-        <template #subList="{parentId}">
+        <template #subList="{ parentId }">
           <comment-list sub>
             <!-- 单条回复 -->
             <comment-item
@@ -124,7 +124,7 @@ export default {
   },
   data() {
     return {
-      forms: [], // 显示在视图上的表单id数组
+      forms: [], // 显示在视图上的所有表单 id
       cacheData: [],
     }
   },
@@ -143,11 +143,14 @@ export default {
     })
   },
   methods: {
-    // * 处理初始数据
+    /**
+     * 处理初始数据
+     */
     processData() {
       this.cacheData = this.data.map(this.comparePropsAndValues)
     },
-    // * 对比和检查每条评论对象字段值
+
+    /** 对比和检查每条评论对象字段值 */
     comparePropsAndValues(comment) {
       // 初始对象
       const originObj = {
@@ -159,6 +162,7 @@ export default {
         reply: null,
         createAt: null,
         user: {},
+        liked: false,
       }
 
       // 赋值
@@ -176,11 +180,12 @@ export default {
 
       return originObj
     },
-    // * 校验数据
+
+    /** 校验数据 */
     validate({ key, value }) {
       const map = {
         user: {
-          validate: function(v) {
+          validate: function (v) {
             return (
               (typeof v !== 'object' || JSON.stringify(v) === '{}') &&
               this.message
@@ -189,19 +194,19 @@ export default {
           message: 'User must be an object with props.',
         },
         reply: {
-          validate: function(v) {
+          validate: function (v) {
             return typeof v !== 'object' && this.message
           },
           message: 'Reply must be an object',
         },
         children: {
-          validate: function(v) {
+          validate: function (v) {
             return !Array.isArray(v) && this.message
           },
           message: 'Children must be an array',
         },
         createAt: {
-          validate: function() {
+          validate: function () {
             return new Date(value).toString() === 'Invalid Date' && this.message
           },
           message: 'CreateAt is not a valid date.',
@@ -216,24 +221,19 @@ export default {
         throw new Error(`validate(): ${res}`)
       }
     },
-    // * 将更新后的数组中的对象数据转换为初始对象结构
+
+    /**
+     * 将更新后的数组中的对象数据转换为初始对象结构
+     */
     transformToOriginObj(comment) {
       try {
-        const _comment = JSON.parse(
-          JSON.stringify(comment, (key, value) => {
-            if (key === '_liked') {
-              return undefined // 过滤掉_liked字段
-            }
-
-            return value
-          })
-        )
+        const _comment = JSON.parse(JSON.stringify(comment))
 
         if (_comment.children && _comment.children.length > 0) {
           _comment.children = _comment.children.map(this.transformToOriginObj)
         }
 
-        // 返回props中自定义的字段名
+        // 返回 props 中自定义的字段名
         if (!this.computedProps) return _comment
 
         for (const [key, value] of this.computedProps) {
@@ -248,22 +248,32 @@ export default {
         console.error(e)
       }
     },
-    // * 点击回复按钮，判断是否已存在该id的表单，存在删除该表单，不存在则新增该表单，并触发其他表单blur事件
+
+    /**
+     * 判断是否已存在该id的表单，存在删除该表单，不存在则新增该表单，并触发其他表单blur事件
+     */
     hasForm(id) {
       this.forms.includes(id) ? this.deleteForm(id) : this.addForm(id)
       this.broadcastBlur(this.$refs['comment-list'].$children, id)
     },
-    // * 增加新表单
+
+    /**
+     * 增加新表单
+     */
     addForm(id) {
       this.forms.push(id)
       // this.scrollIntoView(`${id}-form`)
     },
-    // * 删除表单
+
+    /** 删除表单 */
     deleteForm(id) {
       const index = this.forms.indexOf(id)
       index > -1 && this.forms.splice(index, 1)
     },
-    // * 评论或回复
+
+    /**
+     * 评论或回复
+     */
     async formSubmit({
       newComment: { id, callback, ...params },
       parent = null,
@@ -286,8 +296,8 @@ export default {
         }
       }
     },
-    // * 点赞
-    async handleCommentLike({ id, comment: { children, _liked, ...params } }) {
+
+    async handleCommentLike({ id, comment: { children, ...params } }) {
       const _params = Object.assign(params, { user: this.user })
       if (typeof this.beforeLike === 'function') {
         try {
@@ -299,7 +309,10 @@ export default {
         }
       }
     },
-    // * 删除评论或回复
+
+    /**
+     * 删除评论或回复
+     */
     async handleCommentDelete({ id, comment, parent = null }) {
       if (typeof this.beforeDelete === 'function') {
         try {
@@ -312,7 +325,10 @@ export default {
         }
       }
     },
-    // * 保存点赞
+
+    /**
+     * 保存点赞
+     */
     storeLikes(id) {
       const { commentIndex, replyIndex } = this.getIndex(id)
 
@@ -322,10 +338,10 @@ export default {
         comment = comment.children[replyIndex]
       }
 
-      comment._liked = !comment._liked
+      comment.liked = !comment.liked
 
       if (comment.likes) {
-        comment._liked ? comment.likes++ : comment.likes--
+        comment.liked ? comment.likes++ : comment.likes--
       } else {
         comment.likes = 1
       }
@@ -333,7 +349,10 @@ export default {
       const data = this.cacheData.map(this.transformToOriginObj)
       this.$emit('input', data)
     },
-    // * 存储新评论或回复
+
+    /**
+     * 存储新评论或回复
+     */
     addComment(id, rawData) {
       const { commentIndex } = this.getIndex(id)
 
@@ -349,15 +368,19 @@ export default {
       const signal =
         commentIndex === 'root'
           ? this.cacheData.length - 1
-          : `${commentIndex}-${this.cacheData[commentIndex].children.length -
-              1}`
+          : `${commentIndex}-${
+              this.cacheData[commentIndex].children.length - 1
+            }`
       this.scrollIntoView(`comment-${signal}`)
 
       // 更新外部数据
       const data = this.cacheData.map(this.transformToOriginObj)
       this.$emit('input', data)
     },
-    // * 删除评论或回复
+
+    /**
+     * 删除评论或回复
+     */
     deleteComment(id) {
       const { commentIndex, replyIndex } = this.getIndex(id)
 
@@ -373,7 +396,10 @@ export default {
       const data = this.cacheData.map(this.transformToOriginObj)
       this.$emit('input', data)
     },
-    // * 向下递归触发表单blur事件
+
+    /**
+     * 向下递归触发表单blur事件
+     */
     broadcastBlur(target, id) {
       if (id && target.id === id) return
 
@@ -387,12 +413,18 @@ export default {
         richInput && richInput.blur()
       }
     },
-    // * 从id中提取出序号
+
+    /**
+     * 从id中提取出序号
+     */
     getIndex(id) {
       const [, c, r] = id.split('-')
       return { commentIndex: c === 'root' ? c : +c, replyIndex: +r }
     },
-    // * 使得更新的子组件滚动到视图可见区域
+
+    /**
+     * 将子组件滚动到视图可见区域
+     */
     scrollIntoView(ref) {
       this.$nextTick(() => {
         this.$refs[ref][0].$el.scrollIntoView(false)
