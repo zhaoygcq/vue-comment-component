@@ -1,6 +1,6 @@
 import JuejinComment from './index.vue'
 
-JuejinComment.install = function(Vue) {
+JuejinComment.install = function (Vue) {
   Vue.component(JuejinComment.name, JuejinComment)
 }
 

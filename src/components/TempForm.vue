@@ -68,33 +68,33 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: '输入评论...'
+      default: '输入评论...',
     },
     id: {
       type: [String, Number],
-      default: 'comment-root'
+      default: 'comment-root',
     },
     className: {
       type: String,
-      default: ''
+      default: '',
     },
     comment: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
       focus: false, // * 聚焦状态
       value: '', // * 输入框值
-      imgStr: '' // * 粘贴的图片DOM字符串
+      imgStr: '', // * 粘贴的图片DOM字符串
     }
   },
   computed: {
     // 是否为顶部评论表单
     isRoot() {
       return this.id === 'comment-root'
-    }
+    },
   },
   mounted() {
     const richInput = this.$refs['rich-input']
@@ -134,7 +134,7 @@ export default {
         createAt: new Date().getTime(),
         callback: () => {
           this.isRoot ? this.reset() : this.close()
-        }
+        },
       }
 
       this.$emit('form-submit', data)
@@ -244,7 +244,7 @@ export default {
           '>': '&gt;',
           '&': '&amp;',
           '"': '&quot;',
-          "'": '&apos;'
+          "'": '&apos;',
         }[c]
       })
     },
@@ -258,8 +258,8 @@ export default {
     // 关闭
     close() {
       this.$emit('form-delete', this.id)
-    }
-  }
+    },
+  },
 }
 </script>
 

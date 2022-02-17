@@ -1,9 +1,7 @@
 <template>
   <div id="app">
     <div ref="header" class="change-role">
-      <div class="change" @click="changeUser">
-        切换角色
-      </div>
+      <div class="change" @click="changeUser">切换角色</div>
       <div class="current-role">
         <img :src="currentUser.avatar" />
         <span>{{
@@ -27,6 +25,7 @@
 
 <script>
 import Comment from '@/components/Comment'
+import { EXAMPLE_DATA } from './data'
 
 export default {
   name: 'App',
@@ -61,6 +60,7 @@ export default {
         imgSrc: 'imgSrc',
         children: 'childrenComments',
         likes: 'likes',
+        liked: 'liked',
         reply: 'reply',
         createAt: 'createAt',
         user: 'visitor',
@@ -78,17 +78,18 @@ export default {
     this.wrapStyle = `height: calc(100vh - ${header.clientHeight + 20}px)`
   },
   methods: {
-    async submit(newCommetn, parent, add) {
+    async submit(newComment, parent, add) {
       const res = await new Promise((resolve) => {
         setTimeout(() => {
-          resolve({ newCommetn, parent })
+          resolve({ newComment, parent })
         }, 300)
       })
 
-      add(Object.assign(res.newCommetn, { _id: new Date().getTime() }))
+      add(Object.assign(res.newComment, { _id: new Date().getTime() }))
 
       console.log('addComment: ', res)
     },
+
     async like(comment) {
       const res = await new Promise((resolve) => {
         setTimeout(() => {
@@ -98,13 +99,17 @@ export default {
 
       console.log('likeComment: ', res)
     },
+
     async uploadImg({ file, callback }) {
       const res = await new Promise((resolve, reject) => {
         const reader = new FileReader()
+
         reader.readAsDataURL(file)
+
         reader.onload = () => {
           resolve(reader.result)
         }
+
         reader.onerror = () => {
           reject(reader.error)
         }
@@ -113,6 +118,7 @@ export default {
       callback(res)
       console.log('uploadImg： ', res)
     },
+
     async deleteComment(comment, parent) {
       const res = await new Promise((resolve) => {
         setTimeout(() => {
@@ -122,75 +128,18 @@ export default {
 
       console.log('deleteComment: ', res)
     },
+
     changeUser() {
       const users = this.users
       const index = users.findIndex((c) => c.name === this.currentUser.name)
+
       this.currentUser = users[index === users.length - 1 ? 0 : index + 1]
       this.$refs.comment.scrollTo({ left: 0, top: 0, behavior: 'smooth' })
     },
+
     addData(times) {
       setTimeout(() => {
-        this.data = new Array(times)
-          .fill([
-            {
-              _id: 1,
-              content: '梦芸\n近况如何\n算来已有十月未见你\n甚是思念',
-              visitor: {
-                name: '我叫白云',
-                avatar: require('./assets/image/comment.png'),
-              },
-              createAt: '2020.11.24',
-              likes: 1,
-              childrenComments: [
-                {
-                  _id: 2,
-                  content:
-                    '此刻我能闻见漫天火药味道\n我随军藏身长江边一暗无天日的地窖底\n埋首台灯下写这些字却不知把心绪给寄向何地',
-                  visitor: {
-                    name: 'NARUTO',
-                    avatar: require('./assets/image/avatar2.jpg'),
-                  },
-                  createAt: '2020.11.25',
-                },
-                {
-                  _id: 3,
-                  content: '\n如磐石般坚毅',
-                  visitor: {
-                    name: '我叫黑土',
-                    avatar: require('./assets/image/avatar3.jpg'),
-                  },
-                  createAt: '2020.11.25',
-                  reply: {
-                    name: 'NARUTO',
-                    avatar: require('./assets/image/avatar2.jpg'),
-                  },
-                },
-              ],
-            },
-            {
-              _id: 4,
-              content:
-                '我想时光亦是用来磨的\n细细地磨慢慢地磨\n总能磨出些许墨香来',
-              visitor: {
-                name: '我叫黑土',
-                avatar: require('./assets/image/avatar3.jpg'),
-              },
-              createAt: '2020.12.5',
-              childrenComments: [
-                {
-                  _id: 5,
-                  content:
-                    '即使我鼻子已不灵\n眼睛生出疾\n侥幸你的照片还能辨出依稀',
-                  visitor: {
-                    name: 'NARUTO',
-                    avatar: require('./assets/image/avatar2.jpg'),
-                  },
-                  createAt: '2020.12.6',
-                },
-              ],
-            },
-          ])
-          .flat(Infinity)
+        this.data = new Array(times).fill(EXAMPLE_DATA).flat(Infinity)
       }, 0)
     },
   },

@@ -85,7 +85,7 @@ export default {
           '👉',
           '👈',
           '👌',
-          '💩'
+          '💩',
         ],
         Symbols0: [
           '🤗',
@@ -141,7 +141,7 @@ export default {
           '🏀',
           '⚽',
           '🎮',
-          '🏊'
+          '🏊',
         ],
         Symbols1: [
           '🍗',
@@ -176,16 +176,16 @@ export default {
           '💊',
           '🤮',
           '🏆',
-          '👿'
-        ]
-      }
+          '👿',
+        ],
+      },
     }
   },
   computed: {
     currentEmojis() {
       return this.emojis[this.currentCat]
-    }
-  }
+    },
+  },
 }
 </script>
 

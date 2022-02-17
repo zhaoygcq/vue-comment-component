@@ -1,29 +1,31 @@
 {
   "name": "vue-juejin-comment",
-  "keyword": [
-    "comment",
-    "vue"
-  ],
-  "description": "一个掘金社区风格的评论组件",
   "version": "0.1.6",
   "private": false,
-  "main": "lib/vue-juejin-comment.umd.min.js",
-  "license": "MIT",
-  "author": "Feng Han <hi@fenghan.link>",
+  "description": "一个掘金社区风格的评论组件",
   "repository": {
     "type": "git",
     "url": "https://github.com/fenghan34/vue-comment-component"
   },
+  "license": "MIT",
+  "author": "Feng Han <hi@fenghan.link>",
+  "main": "lib/vue-juejin-comment.umd.min.js",
   "files": [
     "lib"
   ],
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "start": "npx serve dist",
     "build": "vue-cli-service build",
+    "dev": "vue-cli-service serve",
     "lib": "vue-cli-service build --target lib --name vue-juejin-comment --dest lib src/components/Comment/index.js",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "format": "prettier . -w -u",
+    "start": "npx serve dist"
   },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
   "dependencies": {
     "core-js": "^3.6.5",
     "node-sass": "^5.0.0",
@@ -37,15 +39,15 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "prettier": "^2.5.1",
     "sass-loader": "^10.1.0",
     "vue-template-compiler": "^2.6.11"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
   "engines": {
     "node": ">14.0"
-  }
+  },
+  "keyword": [
+    "comment",
+    "vue"
+  ]
 }

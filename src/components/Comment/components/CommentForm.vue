@@ -95,7 +95,7 @@
             type="file"
             @change="handleChange"
             @click="onUpload = true"
-          >
+          />
         </div>
         <slot name="submitBtn">
           <button
@@ -119,31 +119,31 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: '输入评论...'
+      default: '输入评论...',
     },
     id: {
       type: [String, Number],
-      default: 'comment-root'
+      default: 'comment-root',
     },
     comment: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     parent: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     uploadImg: {
       type: Function,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
       focus: false, // * 聚焦状态
       value: '', // * 输入框值
       imgSrc: '', // * 粘贴的图片src
-      showEmojiSelector: false // * 表情选择框状态
+      showEmojiSelector: false, // * 表情选择框状态
     }
   },
   computed: {
@@ -159,9 +159,9 @@ export default {
       return this.isRoot
         ? 'comment-root'
         : this.isSub
-          ? 'reply sub-reply'
-          : 'reply'
-    }
+        ? 'reply sub-reply'
+        : 'reply'
+    },
   },
   mounted() {
     const richInput = this.$refs.input
@@ -255,7 +255,7 @@ export default {
         likes: 0,
         callback: () => {
           this.isRoot ? this.reset() : this.close()
-        }
+        },
       }
 
       if (!this.isSub) {
@@ -292,8 +292,8 @@ export default {
       if (this.showEmojiSelector) {
         this.showEmojiSelector = false
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
