@@ -23,10 +23,10 @@ yarn add vue-juejin-comment
 ## 属性
 
 | 参数           | 说明                       | 类型                           | 默认值 |
-| -------------- | -------------------------- | ------------------------------ | ------ | --- |
-| data / v-model | 绑定数据                   | Array                          | ——     | ——  |
-| user           | 当前用户                   | Object                         | ——     | ——  |
-| props          | 单条评论模型               | Object                         | ——     | ——  |
+| -------------- | -------------------------- | ------------------------------ | ------ |
+| data / v-model | 绑定数据                   | Array                          | ——     | —— |
+| user           | 当前用户                   | Object                         | ——     | —— |
+| props          | 单条评论模型               | Object                         | ——     | —— |
 | before-submit  | 提交评论的回调函数         | Function(comment, parent, add) | ——     |
 | before-like    | 点赞的回调函数             | Function(comment)              | ——     |
 | before-delete  | 点击删除评论的回调函数     | Function(comment, parent)      | ——     |
@@ -96,6 +96,7 @@ export default {
   imgSrc: '', // 评论中的图片地址，非必需
   children: [], // 子评论（回复），非必需
   likes: 0, // 点赞数，非必需
+  liked: false, // 是否已点赞，非必需
   reply: null, // 子评论（回复）人信息，非必需
   createAt: null, // 评论时间，必需
   user: { // 评论人信息，必需
@@ -113,6 +114,7 @@ props: {
   imgSrc: 'img',
   children: 'childrenComments',
   likes: 'likeCount',
+  liked: 'liked',
   reply: 'replyInfo',
   createAt: 'time',
   user: 'visitor'
