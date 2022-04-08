@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "private": false,
   "description": "一个掘金社区风格的评论组件",
+  "license": "MIT",
+  "author": "Feng Han <hi@fenghan.link>",
+  "keyword": [
+    "comment",
+    "vue"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/fenghan34/vue-comment-component"
   },
-  "license": "MIT",
-  "author": "Feng Han <hi@fenghan.link>",
   "main": "lib/vue-juejin-comment.umd.min.js",
   "files": [
     "lib"
@@ -44,10 +48,6 @@
     "vue-template-compiler": "^2.6.11"
   },
   "engines": {
-    "node": ">14.0"
-  },
-  "keyword": [
-    "comment",
-    "vue"
-  ]
+    "node": "14.x"
+  }
 }
