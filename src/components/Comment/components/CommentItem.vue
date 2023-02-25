@@ -45,7 +45,7 @@
             >{{ formatTime(comment.createAt) }}</time
           >
           <div
-            v-if="user.author === true"
+            v-if="user.author === true || user.name === comment.user.name"
             class="delete"
             @click.stop="$emit('comment-delete', { id, comment, parent })"
           >

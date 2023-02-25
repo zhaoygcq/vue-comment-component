@@ -36,8 +36,7 @@ export default {
     const users = [
       {
         name: 'Up&Up',
-        avatar: require('./assets/image/avatar1.jpg'),
-        author: true,
+        avatar: require('./assets/image/avatar1.jpg')
       },
       {
         name: '我叫白云',
